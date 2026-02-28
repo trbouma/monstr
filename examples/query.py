@@ -70,7 +70,7 @@ def get_args():
                         help='comma separated kinds to query - default any')
     parser.add_argument('-a', '--authors', action='store', default=None,
                         help='comma separated list or author keys, can be nsec, npub, public hex or alias')
-    parser.add_argument('-o', '--output', choices=['heads', 'full', 'raw'], default='full',
+    parser.add_argument('-o', '--output', choices=['heads', 'full', 'raw','tags'], default='full',
                         help='format to output events. heads - event_id@time, '
                              'full - includes event content, raw - the raw json str')
     parser.add_argument('--ssl_disable_verify', action='store_true', help='disables checks of ssl certificates')
@@ -122,15 +122,25 @@ async def do_query(args):
                                wait_connect=True)
 
         Event.sort(events, inplace=True, reverse=False)
+        print(f"we got the events {len(events)} {args.output}")
 
         c_evt: Event
         if not events:
             print('no events!')
         else:
             for c_evt in events:
+                print(f"Let's display the event for {args.output}")
+
                 if args.output == 'raw':
                     print(c_evt.event_data())
+                    print(c_evt.tags)
                 else:
+                    if args.output in ('tags'):
+                        print(f"print the tags for {c_evt.pub_key} {Keys(pub_k=c_evt.pub_key).public_key_bech32()}")
+                        
+                        for each in c_evt.tags:
+                            print(each)
+                        print(f"total {len(c_evt.tags)}")
                     if args.output in ('full', 'heads'):
                         print(c_evt)
                     if args.output == 'full':

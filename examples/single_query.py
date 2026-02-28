@@ -3,9 +3,9 @@ import asyncio
 from monstr.client.client import Client, ClientPool
 
 # default relay if not otherwise given
-DEFAULT_RELAY = 'ws://localhost:8080'
+DEFAULT_RELAY = 'wss://relay.damus.io'
 FILTER = [{
-    'limit': 100
+    'limit': 10
 }]
 
 

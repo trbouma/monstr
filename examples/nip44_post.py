@@ -28,8 +28,9 @@ async def do_post(url, text, to_k):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    url = "ws://localhost:8080"
-    to_k = Keys('nsec1znc5uy6e342rzn420l38q892qzmkvjz0hn836hhn8hl8wmkc670qp0lk9n')
-    text = f'hello this is nip4 encrypted to {to_k.public_key_hex()}'
+    url = "wss://relay.nimo.cash"
+    to_k = Keys("06b7819d7f1c7f5472118266ed7bca8785dceae09e36ea3a4af665c6d1d8327c")
+   
+    text = f'hello this is nip44 encrypted to: {to_k.public_key_hex}'
 
     asyncio.run(do_post(url, text, to_k))

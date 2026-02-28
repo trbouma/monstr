@@ -100,8 +100,8 @@ async def start_server(relays):
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.DEBUG)
-    # relays = ['wss://nostr-pub.wellorder.net']
-    relays= ['ws://localhost:8080']
+    relays = ['wss://relay.damus.io']
+    # relays= ['ws://localhost:8080']
     args = sys.argv[1:]
     if args:
         relays = args[0].split(',')

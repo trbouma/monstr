@@ -14,13 +14,17 @@ from monstr.client.event_handlers import DeduplicateAcceptor
 import aioconsole
 from monstr.event.event import Event
 from monstr.util import util_funcs
-from monstr.signing import BasicKeySigner
+from monstr.signing.signing import BasicKeySigner
 from monstr.encrypt import NIP4Encrypt, Keys, NIP44Encrypt
 from monstr.giftwrap import GiftWrap
 
 
-AS_K = 'nsec1yh5z0a4l7zpqca586a0n4heujgs6cpgs9a4quwh8598d78eqeh6qtu468c'
-TO_K = 'npub1fsuwqy83qq7km0308ye8qtqqxjypxal66x094f7t7376dp5haxnq4y542u'
+
+
+# AS_K = 'nsec13a77t68puh24wyff9t8a2wr43uulmxtsgyyvxvw66rr9lv2g3nzqdqsp6k'
+AS_K = 'nsec1jagwdjtyhrln44p8d4pssnh9jdqgsc28lmmzq2lqksplfn9gac2su4790d'
+TO_K = 'npub1q6mcr8tlr3l4gus3sfnw6772s7zae6hqncmw5wj27ejud5wcxf7q0nx7d5'
+
 
 tail = util_funcs.str_tails
 
@@ -73,7 +77,7 @@ async def listen_notes(url):
     asyncio.create_task(c.run())
 
     def sigint_handler(signal, frame):
-        print('stopping...')
+        print('stopping listener...')
         c.end()
         sys.exit(0)
 
@@ -92,7 +96,7 @@ async def listen_notes(url):
             events.sort(reverse=True)
 
             for c_event in events:
-                print(c_event.created_at, c_event.content)
+                print(c_event.id[:4], c_event.created_at, c_event.content)
                 # print(c_event.event_data())
 
 
@@ -100,11 +104,11 @@ async def listen_notes(url):
 
     msg_n = ''
     while msg_n != 'exit':
-        msg = await aioconsole.ainput('')
+        msg_n = await aioconsole.ainput('')
         # msg_n = msg.lower().replace(' ', '')
 
 
-        send_evt = Event(content=msg,
+        send_evt = Event(content=msg_n,
                          tags=[
                              ['p', send_k.public_key_hex()]
                          ])
@@ -112,13 +116,14 @@ async def listen_notes(url):
         wrapped_evt, trans_k = await my_gift.wrap(send_evt,
                                                   to_pub_k=send_k.public_key_hex())
         c.publish(wrapped_evt)
+        # print("published")
 
         # this version is for us.. this seems to be the way oxchat does it I think but you could
         # just store locally though it'd be a pain getting your events on different instance
         await asyncio.sleep(0.2)
         wrapped_evt, trans_k = await my_gift.wrap(send_evt,
                                                   to_pub_k=my_k.public_key_hex())
-        c.publish(wrapped_evt)
+        # c.publish(wrapped_evt)
 
 
         # if msg_n != '' and msg_n != 'exit':
@@ -141,5 +146,5 @@ if __name__ == "__main__":
     # url = ['wss://relay.0xchat.com','wss://relay.damus.io']
     # this relay seems to work the best with these kind of anon published events, atleast for now
     # others it seems to be a bit of hit and miss...
-    url = ['wss://nostr.oxtr.dev']
+    url = ['wss://strfry.openbalance.app']
     asyncio.run(listen_notes(url))

@@ -13,3 +13,11 @@ def show_entities():
 
 if __name__ == "__main__":
     show_entities()
+    test = {}
+    test['pubkey'] = '3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d'
+    test['relay'] = ['wss://strfry.openbalance.app']
+    out = Entities.encode('nprofile', test)
+    print(out)
+    test = '3bf0c63fcb93463407af97a5e5ee64fa883d107ef9e558472c4eb9aaaefa459d'
+    out = Entities.encode('npub',test)
+    print(out)

@@ -3,3 +3,5 @@
 /build/
 /dist/
 /monstr.egg-info/
+.venv
+__pycache__/
